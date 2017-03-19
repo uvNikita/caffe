@@ -51,14 +51,15 @@ const int NPY_DTYPE = NPY_FLOAT32;
 void set_mode_cpu() { Caffe::set_mode(Caffe::CPU); }
 void set_mode_gpu() { Caffe::set_mode(Caffe::GPU); }
 
-void InitLog(int level) {
-  FLAGS_logtostderr = 1;
-  FLAGS_minloglevel = level;
+void InitLog(int level, char* destination) {
+  //FLAGS_logtostderr = 1;
+  //FLAGS_minloglevel = level;
   ::google::InitGoogleLogging("");
+  ::google::SetLogDestination(::google::INFO, destination);
   ::google::InstallFailureSignalHandler();
 }
-void InitLogInfo() {
-  InitLog(google::INFO);
+void InitLogInfo(char* destination) {
+  InitLog(google::INFO, destination);
 }
 void Log(const string& s) {
   LOG(INFO) << s;
@@ -349,7 +350,7 @@ BOOST_PYTHON_MODULE(_caffe) {
 
   // Caffe utility functions
   bp::def("init_log", &InitLog);
-  bp::def("init_log", &InitLogInfo);
+  bp::def("set_log_info", &InitLogInfo);
   bp::def("log", &Log);
   bp::def("set_mode_cpu", &set_mode_cpu);
   bp::def("set_mode_gpu", &set_mode_gpu);
